@@ -18,27 +18,20 @@ Overall, FreeRTOS is a powerful and widely used open-source RTOS that continues 
 
 ## This are some basic Example of Free RTOS Codes in ESP-IDF:
 
-### Task Create
-
+## Include this Libraries First:
 ``` c
 #include "driver/gpio.h"
 #include "esp_log.h"
-*/
 #include <stdio.h>
 #include "sdkconfig.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "esp_system.h"
 #include "esp_spi_flash.h"
+```
+### Task Create
 
-void my_task();
-
-void app_main(void)
-{
-	xTaskCreate(my_task, "myTask", 1024, NULL, 1, NULL);
-}
-
-
+``` c
 void  my_task(void *pvParam)
 {
 	while(1)
@@ -48,18 +41,24 @@ void  my_task(void *pvParam)
 		vTaskDelay(500 / portTICK_PERIOD_MS);
 	}
 }
+
+void app_main(void)
+{
+	xTaskCreate(my_task, "myTask", 1024, NULL, 1, NULL);
+}
 ```
 ### Task Delete
 
 ```c
-#include <stdio.h>
-#include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
-#include "esp_spi_flash.h"
-
-void my_task();
+void  my_task(void *pvParam)
+{
+	while(1)
+	{
+		printf("Hello Shuva, What's up?\n");
+		fflush(stdout);
+		vTaskDelay(500 / portTICK_PERIOD_MS);
+	}
+}
 
 void app_main(void)
 {
@@ -81,35 +80,10 @@ void app_main(void)
 	}
 }
 
-void  my_task(void *pvParam)
-{
-	while(1)
-	{
-		printf("Hello Shuva, What's up?\n");
-		fflush(stdout);
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-	}
-}
 ```
 ### Task Input Parameter
 
 ```c
-#include <stdio.h>
-#include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
-#include "esp_spi_flash.h"
-
-int num = 5;
-
-void vPrintFunction(void *parameter);
-
-void app_main()
-{
-	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) &num, 1, NULL);
-}
-
 void vPrintFunction(void *parameter)
 {
 	while(1)
@@ -118,26 +92,16 @@ void vPrintFunction(void *parameter)
 		vTaskDelay(1000/portTICK_PERIOD_MS);
 	}
 }
+
+void app_main()
+{
+    int num = 5;
+	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) &num, 1, NULL);
+}
 ```
 ### Task Input Parameter as array
 
 ```c
-#include <stdio.h>
-#include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
-#include "esp_spi_flash.h"
-
-int num[] = {5, 6, 7, 8};
-
-void vPrintFunction(void *parameter);
-
-void app_main()
-{
-	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) num, 1, NULL);
-}
-
 void vPrintFunction(void *parameter)
 {
 	while(1)
@@ -149,32 +113,20 @@ void vPrintFunction(void *parameter)
 		vTaskDelay(1000/portTICK_PERIOD_MS);
 	}
 }
+
+void app_main()
+{
+    int num[] = {5, 6, 7, 8};
+	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) num, 1, NULL);
+}
 ```
 ### Task Input Parameter as struct
 
 ```c
-#include <stdio.h>
-#include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_system.h"
-#include "esp_spi_flash.h"
-
 typedef struct struc{
 	int Member1;
 	char Member2;
 }xStruct;
-
-void vPrintFunction(void *parameter);
-
-void app_main()
-{
-	xStruct *obj = NULL;
-	obj = (xStruct *)malloc(sizeof(xStruct));
-	obj->Member1 = 5;
-	obj->Member2 = 'S';
-	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) obj, 1, NULL);
-}
 
 void vPrintFunction(void *parameter)
 {
@@ -185,6 +137,15 @@ void vPrintFunction(void *parameter)
 		vTaskDelay(1000/portTICK_PERIOD_MS);
 	}
 }
+
+void app_main()
+{
+	xStruct *obj = NULL;
+	obj = (xStruct *)malloc(sizeof(xStruct));
+	obj->Member1 = 5;
+	obj->Member2 = 'S';
+	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) obj, 1, NULL);
+}
 ```
 # State Machine
 In FreeRTOS, as with any real-time operating system (RTOS), a state machine is a design pattern often used to model the behavior of a system. A state machine consists of a set of states, events, and transitions. In the context of FreeRTOS, these elements are typically implemented using tasks, queues, and other synchronization mechanisms provided by the RTOS.
@@ -193,13 +154,6 @@ Here's a general approach to implementing a state machine in FreeRTOS:
 ### Event Base State Machine
 
 ```c
-#include <stdio.h>
-#include <time.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <freertos/queue.h>
-#include <esp_log.h>
-
 typedef enum{
 	APP_SM_EVENT_ENTRY,
     APP_EVENT_SYSTEM_INIT,
@@ -352,15 +306,6 @@ void app_main(void)
 ### Event Parameter Base State Machine
 
 ```c
-#include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-#include <time.h>
-#include <freertos/FreeRTOS.h>
-#include <freertos/task.h>
-#include <freertos/queue.h>
-#include <esp_log.h>
-
 typedef enum{
 	APP_SM_EVENT_ENTRY,
     APP_EVENT_SYSTEM_INIT,
