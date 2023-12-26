@@ -302,7 +302,7 @@ void app_main(void)
     gAppSmInt.nextState = NULL;
     xTaskCreate(AppDispatcher, "AppDispatcherTask", 2048, NULL, 1, NULL);
 }
-``
+```
 ### Event Parameter Base State Machine
 
 ```c
