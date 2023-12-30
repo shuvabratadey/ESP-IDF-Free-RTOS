@@ -32,7 +32,7 @@ Overall, FreeRTOS is a powerful and widely used open-source RTOS that continues 
 ### Task Create
 
 ``` c
-void  my_task(void *pvParam)
+void my_task(void *pvParam)
 {
 	while(1)
 	{
@@ -50,7 +50,7 @@ void app_main(void)
 ### Task Delete
 
 ```c
-void  my_task(void *pvParam)
+void my_task(void *pvParam)
 {
 	while(1)
 	{
