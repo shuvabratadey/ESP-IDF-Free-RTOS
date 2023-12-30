@@ -1,6 +1,7 @@
 # ESP-IDF-Free-RTOS
 
 ## What is Free RTOS ?
+
 FreeRTOS is an open-source real-time operating system (RTOS) designed for embedded systems. It is known for its small footprint, portability, and scalability, making it a popular choice for a wide range of microcontroller-based applications. Here are some key aspects of FreeRTOS:
 
 * Architecture and Design
@@ -16,9 +17,10 @@ FreeRTOS is an open-source real-time operating system (RTOS) designed for embedd
   
 Overall, FreeRTOS is a powerful and widely used open-source RTOS that continues to evolve, meeting the needs of developers working on diverse embedded applications.
 
-## This are some basic Example of Free RTOS Codes in ESP-IDF:
+## This are some basic Example of Free RTOS Codes in ESP-IDF
 
-## Include this Libraries First:
+## Include this Libraries First
+
 ``` c
 #include "driver/gpio.h"
 #include "esp_log.h"
@@ -29,128 +31,136 @@ Overall, FreeRTOS is a powerful and widely used open-source RTOS that continues 
 #include "esp_system.h"
 #include "esp_spi_flash.h"
 ```
+
 ### Task Create
 
 ``` c
 void my_task(void *pvParam)
 {
-	while(1)
-	{
-		printf("Hello Shuva, What's up?\n");
-		fflush(stdout);
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-	}
+ while(1)
+ {
+  printf("Hello Shuva, What's up?\n");
+  fflush(stdout);
+  vTaskDelay(500 / portTICK_PERIOD_MS);
+ }
 }
 
 void app_main(void)
 {
-	xTaskCreate(my_task, "myTask", 1024, NULL, 1, NULL);
+ xTaskCreate(my_task, "myTask", 1024, NULL, 1, NULL);
 }
 ```
+
 ### Task Delete
 
 ```c
 void my_task(void *pvParam)
 {
-	while(1)
-	{
-		printf("Hello Shuva, What's up?\n");
-		fflush(stdout);
-		vTaskDelay(500 / portTICK_PERIOD_MS);
-	}
+ while(1)
+ {
+  printf("Hello Shuva, What's up?\n");
+  fflush(stdout);
+  vTaskDelay(500 / portTICK_PERIOD_MS);
+ }
 }
 
 void app_main(void)
 {
-	TaskHandle_t myTaskHandeler = NULL;
-	xTaskCreate(my_task, "myTask", 1024, NULL, 1, &myTaskHandeler);
-	vTaskDelay(3000 / portTICK_PERIOD_MS);
+ TaskHandle_t myTaskHandeler = NULL;
+ xTaskCreate(my_task, "myTask", 1024, NULL, 1, &myTaskHandeler);
+ vTaskDelay(3000 / portTICK_PERIOD_MS);
 
-	if(myTaskHandeler != NULL)
-	{
-		vTaskDelete(myTaskHandeler);
-	}
+ if(myTaskHandeler != NULL)
+ {
+  vTaskDelete(myTaskHandeler);
+ }
 
-	printf("Task has been deleted.");
-	while(1)
-	{
-		printf("\nFrom main function.\n");
-		fflush(stdout);
-		vTaskDelay(2000 / portTICK_PERIOD_MS);
-	}
+ printf("Task has been deleted.");
+ while(1)
+ {
+  printf("\nFrom main function.\n");
+  fflush(stdout);
+  vTaskDelay(2000 / portTICK_PERIOD_MS);
+ }
 }
 
 ```
+
 ### Task Input Parameter
 
 ```c
 void vPrintFunction(void *parameter)
 {
-	while(1)
-	{
-		printf("From myTask, Parameter = %d\n", *((int *)parameter));
-		vTaskDelay(1000/portTICK_PERIOD_MS);
-	}
+ while(1)
+ {
+  printf("From myTask, Parameter = %d\n", *((int *)parameter));
+  vTaskDelay(1000/portTICK_PERIOD_MS);
+ }
 }
 
 void app_main()
 {
     int num = 5;
-	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) &num, 1, NULL);
+ xTaskCreate(vPrintFunction, "myTask", 2048, (void *) &num, 1, NULL);
 }
 ```
+
 ### Task Input Parameter as array
 
 ```c
 void vPrintFunction(void *parameter)
 {
-	while(1)
-	{
-		printf("From myTask, 1st Parameter = %d\n", *((int *)parameter));
-		printf("From myTask, 2nd Parameter = %d\n", *((int *)parameter + 1));
-		printf("From myTask, 3rd Parameter = %d\n", *((int *)parameter + 2));
-		printf("From myTask, 4th Parameter = %d\n", *((int *)parameter + 3));
-		vTaskDelay(1000/portTICK_PERIOD_MS);
-	}
+ while(1)
+ {
+  printf("From myTask, 1st Parameter = %d\n", *((int *)parameter));
+  printf("From myTask, 2nd Parameter = %d\n", *((int *)parameter + 1));
+  printf("From myTask, 3rd Parameter = %d\n", *((int *)parameter + 2));
+  printf("From myTask, 4th Parameter = %d\n", *((int *)parameter + 3));
+  vTaskDelay(1000/portTICK_PERIOD_MS);
+ }
 }
 
 void app_main()
 {
     int num[] = {5, 6, 7, 8};
-	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) num, 1, NULL);
+ xTaskCreate(vPrintFunction, "myTask", 2048, (void *) num, 1, NULL);
 }
 ```
+
 ### Task Input Parameter as struct
 
 ```c
 typedef struct struc{
-	int Member1;
-	char Member2;
+int Member1;
+ char Member2;
 }xStruct;
 
 void vPrintFunction(void *parameter)
 {
-	while(1)
-	{
-		printf("From myTask, 1st Parameter = %d\n", ((xStruct *)parameter)->Member1);
-		printf("From myTask, 2nd Parameter = %c\n", ((xStruct *)parameter)->Member2);
-		vTaskDelay(1000/portTICK_PERIOD_MS);
-	}
+ while(1)
+ {
+  printf("From myTask, 1st Parameter = %d\n", ((xStruct *)parameter)->Member1);
+  printf("From myTask, 2nd Parameter = %c\n", ((xStruct *)parameter)->Member2);
+  vTaskDelay(1000/portTICK_PERIOD_MS);
+ }
 }
 
 void app_main()
 {
-	xStruct *obj = NULL;
-	obj = (xStruct *)malloc(sizeof(xStruct));
-	obj->Member1 = 5;
-	obj->Member2 = 'S';
-	xTaskCreate(vPrintFunction, "myTask", 2048, (void *) obj, 1, NULL);
+ xStruct *obj = NULL;
+ obj = (xStruct *)malloc(sizeof(xStruct));
+ obj->Member1 = 5;
+ obj->Member2 = 'S';
+ xTaskCreate(vPrintFunction, "myTask", 2048, (void *) obj, 1, NULL);
 }
 ```
+
 # State Machine
+
 In FreeRTOS, as with any real-time operating system (RTOS), a state machine is a design pattern often used to model the behavior of a system. A state machine consists of a set of states, events, and transitions. In the context of FreeRTOS, these elements are typically implemented using tasks, queues, and other synchronization mechanisms provided by the RTOS.
 
 Here's a general approach to implementing a state machine in FreeRTOS:
+
 ### Event Base State Machine
 
 ```c
@@ -209,7 +219,7 @@ app_smStatus_t AppState1(app_smInst_t *const pInstance, app_sm_t pEventParam) {
             returnStatus = APP_SM_STATUS_TRAN;
             break;
         }
-		
+  
         case APP_SM_EVENT_EXIT: {
             ESP_LOGI("TAG", "APP_SM_EVENT_EXIT 1");
             returnStatus = APP_SM_STATUS_HANDLED;
@@ -248,7 +258,7 @@ app_smStatus_t AppState2(app_smInst_t *const pInstance, app_sm_t pEventParam) {
             returnStatus = APP_SM_STATUS_TRAN;
             break;
         }
-		
+  
         case APP_SM_EVENT_EXIT: {
             ESP_LOGW("TAG", "APP_SM_EVENT_EXIT 2");
             returnStatus = APP_SM_STATUS_HANDLED;
@@ -303,14 +313,15 @@ void app_main(void)
     xTaskCreate(AppDispatcher, "AppDispatcherTask", 2048, NULL, 1, NULL);
 }
 ```
+
 ### Event Parameter Base State Machine
 
 ```c
 typedef enum{
-	APP_SM_EVENT_ENTRY,
+ APP_SM_EVENT_ENTRY,
     APP_EVENT_SYSTEM_INIT,
     APP_EVENT_SYSTEM_NEXT,
-	APP_SM_EVENT_EXIT,
+ APP_SM_EVENT_EXIT,
 } app_sm_t;
 
 typedef struct {
@@ -380,7 +391,7 @@ app_smStatus_t AppState1(app_smInst_t *const pInstance, app_eventParam_t *pEvent
             returnStatus = APP_SM_STATUS_TRAN;
             break;
         }
-		
+  
         case APP_SM_EVENT_EXIT: {
             ESP_LOGI("TAG", "APP_SM_EVENT_EXIT 1");
             returnStatus = APP_SM_STATUS_HANDLED;
@@ -428,7 +439,7 @@ app_smStatus_t AppState2(app_smInst_t *const pInstance, app_eventParam_t *pEvent
             returnStatus = APP_SM_STATUS_TRAN;
             break;
         }
-		
+  
         case APP_SM_EVENT_EXIT: {
             ESP_LOGW("TAG", "APP_SM_EVENT_EXIT 2");
             returnStatus = APP_SM_STATUS_HANDLED;
@@ -484,7 +495,9 @@ void app_main(void)
     xTaskCreate(AppDispatcher, "AppDispatcherTask", 2048, NULL, 1, NULL);
 }
 ```
+
 ## Semaphore Code
+
 ```c
 SemaphoreHandle_t xSemaphore = NULL;
 
