@@ -155,10 +155,10 @@ Here's a general approach to implementing a state machine in FreeRTOS:
 
 ```c
 typedef enum{
-	APP_SM_EVENT_ENTRY,
+    APP_SM_EVENT_ENTRY,
     APP_EVENT_SYSTEM_INIT,
     APP_EVENT_SYSTEM_NEXT,
-	APP_SM_EVENT_EXIT,
+    APP_SM_EVENT_EXIT,
 } app_sm_t;
 
 typedef enum {
