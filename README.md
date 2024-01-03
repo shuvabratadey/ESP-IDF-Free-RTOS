@@ -298,7 +298,6 @@ static void AppDispatcher(void *pvParam) {
                 ESP_LOGE("TAG", "%s : %d : State Change Requested, but NextSate is NULL", __func__, __LINE__);
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(500));
     }
     vTaskDelete(NULL);
 }
@@ -479,7 +478,6 @@ static void AppDispatcher(void *pvParam) {
                 ESP_LOGE("TAG", "%s : %d : State Change Requested, but NextSate is NULL", __func__, __LINE__);
             }
         }
-        vTaskDelay(pdMS_TO_TICKS(500));
     }
     vTaskDelete(NULL);
 }
